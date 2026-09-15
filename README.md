@@ -9,38 +9,48 @@ PC installed with SCILAB.
 # PROGRAM: 
 ```
 clc;
+clear;
 close;
-M=input('Enter the Odd Filter Length =');
-Wc=input('Enter the Digital Cut off frequency =');
-alpha=(M-1)/2;
-for n=1:M
-if (n==alpha+1) then
-hd(n)=Wc/%pi;
-else
-hd(n)=sin(Wc*((n-1)-alpha))/(((n-1)-alpha)*%pi);
-end
-end
-for n=1:M
-W(n)=0.54-(0.46*cos((2*%pi*(n-1))/(M-1)));
-end
-h=hd.*W;
-disp(h,'Filter Coefficients are');
-[hzm,fr]=frmag(h,256);
-subplot(2,1,1);
-plot(2*fr,hzm);
-xlabel('Normalized Digital Frequency w');
-ylabel('Magnitude');
-title('Frequency Response of FIR LPF using Hamming Window');
-hzm_dB=20*log10(hzm);
-subplot(2,1,2);
-plot(2*fr,hzm_dB);
-xlabel('Normalized Digital Frequency W');
-ylabel('Magnitude in dB');
-title('Frequency Response of FIR LPF using Hamming Window');
-```
-# OUTPUT: 
-<img width="730" height="585" alt="image" src="https://github.com/user-attachments/assets/ae058699-74de-4b0b-bea9-a2e3ce87ec8e" />
 
+N = 21;               
+wc = %pi / 2;         
+alpha = (N - 1) / 2;  
+
+hd = zeros(1, N);
+for n = 0 : N-1
+    if n == alpha then
+        hd(n+1) = wc / %pi;
+    else
+        hd(n+1) = sin(wc * (n - alpha)) / (%pi * (n - alpha));
+    end
+end
+
+w = zeros(1, N);
+for n = 0 : N-1
+    w(n+1) = 0.54 - 0.46 * cos((2 * %pi * n) / (N - 1));
+end
+
+h = hd .* w;         
+
+[H, w_freq] = frmag(h, 256); 
+
+figure;
+subplot(2, 1, 1);
+plot2d3(0:N-1, h);          
+plot(0:N-1, h, 'ro');       
+xtitle('Impulse Response', 'n', 'h(n)');
+xgrid(1);
+
+subplot(2, 1, 2);
+H_dB = 20 * log10(H);       
+plot(w_freq, H_dB);
+xtitle('Magnitude Response', 'Normalized Frequency', 'Magnitude (dB)');
+xgrid(1);
+```
+
+# OUTPUT: 
+
+<img width="1917" height="893" alt="image" src="https://github.com/user-attachments/assets/e9a28a32-6648-4fef-945c-f5df759ea741" />
 
 # RESULT: 
 
@@ -52,40 +62,49 @@ Thus design of low pass FIR digital filter using-Hamming-Window waveforms were p
 PC installed with SCILAB. 
 
 # PROGRAM: 
-```
-clc;
+```clc;
+clear;
 close;
-M=input('Enter the Odd Filter Length =');
-Wc=input('Enter the Digital Cut off frequency =');
-alpha=(M-1)/2;
-for n=1:M
-if (n==alpha+1) then
-hd(n)=1-Wc/%pi;
-else
-hd(n)=-sin(Wc*((n-1)-alpha))/(((n-1)-alpha)*%pi);
-end
-end
-for n=1:M
-W(n)=0.54-(0.46*cos((2*%pi*(n-1))/(M-1)));
-end
-h=hd.*W;
-disp(h,'Filter Coefficients are');
-[hzm,fr]=frmag(h,256);
-subplot(2,1,1);
-plot(2*fr,hzm);
-xlabel('Normalized Digital Frequency w');
-ylabel('Magnitude');
-title('Frequency Response of FIR HPF using Hamming Window');
-hzm_dB=20*log10(hzm);
-subplot(2,1,2);
-plot(2*fr,hzm_dB);
-xlabel('Normalized Digital Frequency W');
-ylabel('Magnitude in dB');
-title('Frequency Response of FIR HPF using Hamming Window');
-```
-# OUTPUT: 
-<img width="712" height="578" alt="image" src="https://github.com/user-attachments/assets/51899cd9-d5aa-4f67-a6f0-eecd7c671e9f" />
 
+N = 21;               
+wc = %pi / 2;         
+alpha = (N - 1) / 2;  
+
+hd = zeros(1, N);
+for n = 0 : N-1
+    if n == alpha then
+        hd(n+1) = 1 - (wc / %pi);
+    else
+        hd(n+1) = -sin(wc * (n - alpha)) / (%pi * (n - alpha));
+    end
+end
+
+w = zeros(1, N);
+for n = 0 : N-1
+    w(n+1) = 0.54 - 0.46 * cos((2 * %pi * n) / (N - 1));
+end
+
+h = hd .* w;         
+
+[H, w_freq] = frmag(h, 256); 
+
+figure;
+subplot(2, 1, 1);
+plot2d3(0:N-1, h);          
+plot(0:N-1, h, 'ro');       
+xtitle('Impulse Response', 'n', 'h(n)');
+xgrid(1);
+
+subplot(2, 1, 2);
+H_dB = 20 * log10(H);       
+plot(w_freq, H_dB);
+xtitle('Magnitude Response', 'Normalized Frequency', 'Magnitude (dB)');
+xgrid(1);
+```
+
+# OUTPUT: 
+
+<img width="1917" height="897" alt="image" src="https://github.com/user-attachments/assets/aa779ced-50ee-433e-aaa8-9f70e973f3cd" />
 
 # RESULT: 
 Thus design of HIGH pass FIR digital filter using-Hamming-Window waveforms were plotted and output was verified.
@@ -98,40 +117,49 @@ PC installed with SCILAB.
 # PROGRAM: 
 ```
 clc;
+clear;
 close;
-M=input('Enter the Odd Filter Length =');
-Wc=input('Enter the Digital Cut off frequency =');
-Wc2=Wc(2);
-Wc1=Wc(1);
-alpha=(M-1)/2;
-for n=1:M
-if (n==alpha+1) then
-hd(n)=(Wc2-Wc1)/%pi;
-else
-hd(n)=(sin(Wc2*((n-1)-alpha))-sin(Wc1*((n-1)-alpha)))/(((n-1)-alpha)*%pi);
-end
-end
-for n=1:M
-W(n)=0.54-(0.46*cos((2*%pi*(n-1))/(M-1)));
-end
-h=hd.*W;
-disp(h,'Filter Coefficients are');
-[hzm,fr]=frmag(h,256);
-subplot(2,1,1);
-plot(2*fr,hzm);
-xlabel('Normalized Digital Frequency w');
-ylabel('Magnitude');
-title('Frequency Response of FIR BPF using Hamming Window');
-hzm_dB=20*log10(hzm);
-subplot(2,1,2);
-plot(2*fr,hzm_dB);
-xlabel('Normalized Digital Frequency W');
-ylabel('Magnitude in dB');
-title('Frequency Response of FIR BPF using Hamming Window');
-```
-# OUTPUT: 
-<img width="711" height="581" alt="image" src="https://github.com/user-attachments/assets/1413cb0e-3b3b-4f11-ac2c-c708b68d13c0" />
 
+N = 21;               
+wc1 = %pi / 4;        
+wc2 = 3 * %pi / 4;    
+alpha = (N - 1) / 2;  
+
+hd = zeros(1, N);
+for n = 0 : N-1
+    if n == alpha then
+        hd(n+1) = (wc2 - wc1) / %pi;
+    else
+        hd(n+1) = (sin(wc2 * (n - alpha)) - sin(wc1 * (n - alpha))) / (%pi * (n - alpha));
+    end
+end
+
+w = zeros(1, N);
+for n = 0 : N-1
+    w(n+1) = 0.54 - 0.46 * cos((2 * %pi * n) / (N - 1));
+end
+
+h = hd .* w;         
+
+[H, w_freq] = frmag(h, 256); 
+
+figure;
+subplot(2, 1, 1);
+plot2d3(0:N-1, h);          
+plot(0:N-1, h, 'ro');       
+xtitle('Impulse Response', 'n', 'h(n)');
+xgrid(1);
+
+subplot(2, 1, 2);
+H_dB = 20 * log10(H);       
+plot(w_freq, H_dB);
+xtitle('Magnitude Response', 'Normalized Frequency', 'Magnitude (dB)');
+xgrid(1);
+```
+
+# OUTPUT: 
+
+<img width="1917" height="893" alt="image" src="https://github.com/user-attachments/assets/850dba09-7afb-4915-818c-2d91543503d3" />
 
 # RESULT: 
 Thus design of BAND pass FIR digital filter using-Hamming-Window waveforms were plotted and output was verified.
@@ -144,40 +172,49 @@ PC installed with SCILAB.
 # PROGRAM: 
 ```
 clc;
+clear;
 close;
-M=input('Enter the Odd Filter Length =');
-Wc=input('Enter the Digital Cut off frequency =');
-Wc2=Wc(2);
-Wc1=Wc(1);
-alpha=(M-1)/2;
-for n=1:M
-if (n==alpha+1) then
-hd(n)=1-((Wc2-Wc1)/%pi);
-else
-hd(n)=(sin(Wc1*((n-1)-alpha))-sin(Wc2*((n-1)-alpha)))/(((n-1)-alpha)*%pi);
-end
-end
-for n=1:M
-W(n)=0.54-(0.46*cos((2*%pi*(n-1))/(M-1)));
-end
-h=hd.*W;
-disp(h,'Filter Coefficients are');
-[hzm,fr]=frmag(h,256);
-subplot(2,1,1);
-plot(2*fr,hzm);
-xlabel('Normalized Digital Frequency w');
-ylabel('Magnitude');
-title('Frequency Response of FIR BSF using Hamming Window');
-hzm_dB=20*log10(hzm);
-subplot(2,1,2);
-plot(2*fr,hzm_dB);
-xlabel('Normalized Digital Frequency W');
-ylabel('Magnitude in dB');
-title('Frequency Response of FIR BSF using Hamming Window');
-```
-# OUTPUT: 
-<img width="736" height="582" alt="image" src="https://github.com/user-attachments/assets/9f6d4bd4-0f44-45f3-9c06-005fedda2f97" />
 
+N = 21;               
+wc1 = %pi / 4;        
+wc2 = 3 * %pi / 4;    
+alpha = (N - 1) / 2;  
+
+hd = zeros(1, N);
+for n = 0 : N-1
+    if n == alpha then
+        hd(n+1) = 1 - ((wc2 - wc1) / %pi);
+    else
+        hd(n+1) = (sin(wc1 * (n - alpha)) - sin(wc2 * (n - alpha))) / (%pi * (n - alpha));
+    end
+end
+
+w = zeros(1, N);
+for n = 0 : N-1
+    w(n+1) = 0.54 - 0.46 * cos((2 * %pi * n) / (N - 1));
+end
+
+h = hd .* w;         
+
+[H, w_freq] = frmag(h, 256); 
+
+figure;
+subplot(2, 1, 1);
+plot2d3(0:N-1, h);          
+plot(0:N-1, h, 'ro');       
+xtitle('Impulse Response', 'n', 'h(n)');
+xgrid(1);
+
+subplot(2, 1, 2);
+H_dB = 20 * log10(H);       
+plot(w_freq, H_dB);
+xtitle('Magnitude Response', 'Normalized Frequency', 'Magnitude (dB)');
+xgrid(1);
+```
+
+# OUTPUT: 
+
+<img width="1917" height="891" alt="image" src="https://github.com/user-attachments/assets/919231d8-21cf-45cf-a1ea-70856625ced7" />
 
 # RESULT: 
 Thus design of BAND STOP FIR digital filter using-Hamming-Window waveforms were plotted and output was verified.
